@@ -1,7 +1,90 @@
+@font-face {
+    font-family: morris;
+    src: url('../../../assets/fonts/MorrisRoman-Black.ttf');
+}
+
+.admin-form {
+    color: #eeeeee;
+    font-family: morris;
+
+}
+ 
+input, button, select{
+    box-sizing: border-box;
+    width: 80%;
+    height:35px;
+    border-radius: 20px;
+    border: 2px solid black;
+    background-color: rgb(184,130,11,.5);
+    font-size: 1.4em;
+    text-indent: 10px;
+    color: #dddddd;
+
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+}
+
+
+
+input:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+input:disabled {
+    background-color: #AAAAAA;
+}
+
+label {
+    font-size: 1.1em;
+}
+
+button {
+    margin-top: 25px;
+}
+
+button:disabled {
+    background-color: #AAAAAA;
+}
+
+
+.nested-form-group {
+    display:flex;
+    flex-flow: row nowrap;
+    width: 80%;
+    justify-content: space-between;
+}
+
+
+.nested-form-group .input-container {
+    padding:5px;
+}
+
+input.armor-group-stat {
+    width: 100%;
+}
+
+
+.input-area {
+    display: flex;
+    flex-direction: column;
+    margin-top:5px;
+}
+
 .has-error  {
     border: 2px solid red;
 }
 
 .error-message {
     color: red;
+    font-size:1.1em;
 }

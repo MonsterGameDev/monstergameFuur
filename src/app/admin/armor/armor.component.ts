@@ -29,8 +29,8 @@ export class ArmorComponent implements OnInit {
   };
 
   private armorLevelFieldMessages = {
-    required: 'Please enter a number between 0 and 50',
-    min: 'You cannot enter a value below zero',
+    required: 'Please enter a number between 1 and 50',
+    min: 'You cannot enter a value below 1',
     max: 'you cannot enter a value greater than 50'
   };
 
@@ -68,13 +68,13 @@ export class ArmorComponent implements OnInit {
     // FORM
     this.armorForm = this.fb.group({
       armorName: ['', [Validators.required, Validators.minLength(3)]],
-      armorLevel: ['', [Validators.required, Validators.min(0), Validators.max(50)]],
+      armorLevel: ['', [Validators.required, Validators.min(1), Validators.max(50)]],
       armorType: ['', [Validators.required]],
       armorStatsGroup: this.fb.group({
         health: ['', [Validators.min(0), Validators.max(50)]],
         power: ['', [Validators.min(0), Validators.max(50)]],
         defence: ['', [Validators.min(0), Validators.max(50)]]
-      }, { validator: this.armorStatSummarizing(30) })
+      }) // , { validator: this.armorStatSummarizing(this._armorLevel)})
     });
 
     this.armorForm.get('armorStatsGroup').disable();
@@ -88,12 +88,15 @@ export class ArmorComponent implements OnInit {
       this.armorLevelValidityCheck(armorLevelControl);
       this._armorLevel = armorLevelControl.value;
 
+      // dynamically setting the validator for the StatsGroup fields-sum
+      this.armorForm.get('armorStatsGroup').setValidators( this.armorStatSummarizing(this._armorLevel));
+
       // disable armorFormGroup if ho armorLevel has been entered
-      (!this._armorLevel || this._armorLevel === 0 || this._armorLevel === 50)
+      (!this._armorLevel || this._armorLevel < 1 || this._armorLevel > 50)
         ? this.armorForm.get('armorStatsGroup').disable()
         : this.armorForm.get('armorStatsGroup').enable() ;
 
-      this.armorStatsGroupMessages['sum'] = 'The sum of health, power and defence stats should equal the set armorLevel: '
+      this.armorStatsGroupMessages['sum'] = 'The sum of health, power and defence stats should equal the armorLevel: '
       + this._armorLevel;
     });
 
