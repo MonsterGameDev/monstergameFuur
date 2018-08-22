@@ -1,0 +1,22 @@
+<h1 class="form-header">List of All Armor</h1>
+<div class="admin-form">
+    <span class='tblHead'>Type</span>
+    <span class='tblHead'>Level</span>
+    <span class='tblHead'>Health</span>
+    <span class='tblHead'>Power</span>
+    <span class='tblHead'>Defense</span>
+    <span class='tblHead action'></span>
+    <span class='tblHead action'></span>
+    <span class='tblHead action'></span>
+  <div *ngFor="let a of armor" class="data-row">
+      <span class="armor-name">{{ a.armorName }}</span>
+      <span class="cell">{{ a.armorType }}</span>
+      <span class="cell">{{ a.armorLevel }}</span>
+      <span class="cell">{{ a.armorStats.health }}</span>
+      <span class="cell">{{ a.armorStats.power }}</span>
+      <span class="cell">{{ a.armorStats.defense }}</span>
+      <span class="cell action"><a [routerLink]="['/editarmor', a.id]">EDIT</a></span>
+      <span class="cell action"><a [routerLink]="['/armordetails', a.id]">DETAILS</a></span>
+      <span class="cell action"><a (click)="deleteArmor(a.id)">DELETE</a></span>
+   </div>
+</div>

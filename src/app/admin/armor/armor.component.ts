@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { debounceTime, map } from 'rxjs/operators';
-import { ArmorTypeEnum } from '../+state/admin.interfaces';
+import { ArmorTypeEnum, Armor } from '../+state/admin.interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-armor',
@@ -9,7 +14,7 @@ import { ArmorTypeEnum } from '../+state/admin.interfaces';
   styleUrls: ['./armor.component.css']
 })
 export class ArmorComponent implements OnInit {
-
+  armor: Armor;
   armorForm: FormGroup;
   armorNameErrMsg: string;
   armorLevelErrMsg: string;
@@ -17,14 +22,17 @@ export class ArmorComponent implements OnInit {
   armorStatsGroupErrMsg: string;
   armorStatsGroupHealthErrMsg: string;
   armorStatsGroupPowerErrMsg: string;
-  armorStatsGroupDefenceErrMsg: string;
+  armorStatsGroupdefenseErrMsg: string;
   _armorLevel: number;
+  armorFormHeader: string;
   armorTypeEnum = ArmorTypeEnum;
   keys: string[];
+  newArmor: Armor;
+  sub: Subscription;
 
-  // ERROR MESSAGES
+  //#region  "ERROR MESSAGES"
   private armorNameFieldMessages = {
-    required: 'Please enter a name for the Armor Piece',
+    required: 'Please enter a name  the Armor Piece',
     minlength: 'The name should be longer than 3 charcters'
   };
 
@@ -39,7 +47,7 @@ export class ArmorComponent implements OnInit {
   };
 
   private armorStatsGroupMessages = {
-    sum: `The total sum of health, power and defence should equal ${this._armorLevel}`
+    sum: `The total sum of health, power and defense should equal ${this._armorLevel}`
   };
 
   private armorStatsGroupHealthMessages = {
@@ -52,15 +60,20 @@ export class ArmorComponent implements OnInit {
     max: 'The value for stat: Power should be below 50'
   };
 
-  private armorStatsGroupDefenceMessages = {
-    min:  'The value for stat: Defence should be above 0',
-    max: 'The value for stat: Defence should be below 50'
+  private armorStatsGroupdefenseMessages = {
+    min:  'The value for stat: defense should be above 0',
+    max: 'The value for stat: defense should be below 50'
   };
+//#endregion "ERROR MESSAGES"
 
-  constructor(private fb: FormBuilder) {
-  }
+  constructor(
+      private fb: FormBuilder,
+      private svc: DataService,
+      private activatedRoute: ActivatedRoute,
+      private router: Router) { }
 
   ngOnInit() {
+
     // SET PROPERTIES
     this._armorLevel = 0;
     this.keys = Object.keys(this.armorTypeEnum);
@@ -73,13 +86,19 @@ export class ArmorComponent implements OnInit {
       armorStatsGroup: this.fb.group({
         health: ['', [Validators.min(0), Validators.max(50)]],
         power: ['', [Validators.min(0), Validators.max(50)]],
-        defence: ['', [Validators.min(0), Validators.max(50)]]
-      }) // , { validator: this.armorStatSummarizing(this._armorLevel)})
+        defense: ['', [Validators.min(0), Validators.max(50)]]
+      })
     });
 
     this.armorForm.get('armorStatsGroup').disable();
 
-    // FIELD VALUE-CHANGE LISTENERS
+    this.sub = this.activatedRoute.params
+      .subscribe(params => {
+      const id = params['id'];
+      this.getArmor(id);
+    });
+
+    //#region "FIELD VALUE-CHANGE LISTENERS"
     const armorNameControl = this.armorForm.get('armorName');
     this.armorForm.get('armorName').valueChanges.pipe(debounceTime(1000)).subscribe(val => this.armorNameValidityCheck(armorNameControl));
 
@@ -96,7 +115,7 @@ export class ArmorComponent implements OnInit {
         ? this.armorForm.get('armorStatsGroup').disable()
         : this.armorForm.get('armorStatsGroup').enable() ;
 
-      this.armorStatsGroupMessages['sum'] = 'The sum of health, power and defence stats should equal the armorLevel: '
+      this.armorStatsGroupMessages['sum'] = 'The sum of health, power and defense stats should equal the armorLevel: '
       + this._armorLevel;
     });
 
@@ -112,11 +131,15 @@ export class ArmorComponent implements OnInit {
     const armorStatsGroupPowerControl = this.armorForm.get('armorStatsGroup.power');
     armorStatsGroupPowerControl.valueChanges.subscribe(val => this.armorStatsGroupPowerValidityCheck(armorStatsGroupPowerControl));
 
-    const armorStatsGroupDefenceControl = this.armorForm.get('armorStatsGroup.defence');
-    armorStatsGroupDefenceControl.valueChanges.subscribe(val => this.armorStatsGroupDefenceValidityCheck(armorStatsGroupDefenceControl));
+    const armorStatsGroupdefenseControl = this.armorForm.get('armorStatsGroup.defense');
+    armorStatsGroupdefenseControl.valueChanges.subscribe(val => this.armorStatsGroupdefenseValidityCheck(armorStatsGroupdefenseControl));
+
+    //#endregion "FIELD VALUE-CHANGE LISTENERS"
+
   }  // end ngOnInit()
 
-  // VALIDATION CHECK - ACTIVATE ERROR-MESSAGES
+
+  //#region "VALIDAION CHECK"
   armorNameValidityCheck(c: AbstractControl): void {
     this.armorNameErrMsg = '';
     if ((c.touched || c.dirty) && c.errors) {
@@ -161,11 +184,76 @@ export class ArmorComponent implements OnInit {
     }
   }
 
-  armorStatsGroupDefenceValidityCheck (c: AbstractControl) {
-    this.armorStatsGroupDefenceErrMsg = '';
+  armorStatsGroupdefenseValidityCheck (c: AbstractControl) {
+    this.armorStatsGroupdefenseErrMsg = '';
     if ((c.touched || c.dirty) && c.errors) {
-      this.armorStatsGroupDefenceErrMsg = Object.keys(c.errors).map(key => this.armorStatsGroupDefenceMessages[key]).toString();
+      this.armorStatsGroupdefenseErrMsg = Object.keys(c.errors).map(key => this.armorStatsGroupdefenseMessages[key]).toString();
     }
+  }
+  //#endregion "VALIDITY CHECK"
+
+  save() {
+    if (this.armorForm.valid) {
+      if (this.armorForm.dirty) {
+        const a = { ...this.armor, ...this.armorForm.value };
+        if (a.id === 0) {
+          this.svc.createArmor(a)
+            .subscribe (
+              () => this.onSaveComplete(),
+              (error: any) => console.log('Error: ', error)
+            );
+        } else {
+          this.svc.updateArmor(a)
+            .subscribe(
+              () => this.onSaveComplete(),
+              (error: any) => console.log('Error: ', error)
+            );
+        }
+      } else if (!this.armorForm.dirty) {
+        this.onSaveComplete();
+      }
+    }
+  }
+
+  private onSaveComplete(): void {
+    this.armorForm.reset();
+    this.router.navigate(['/armor']);
+  }
+
+
+  getArmor(id: number) {
+    this.svc.getArmorPiece(id)
+      .subscribe(
+        (val: Armor)  => this.onDataReceived(val),
+        (err) => console.log('Error: ', err)
+      );
+  }
+
+  onDataReceived(armor: Armor) {
+    if (this.armorForm) {
+      this.armorForm.reset();
+    }
+
+    this.armor = armor;
+
+    if (armor.id === 0) {
+      this.armorFormHeader = 'Add Armor';
+    } else {
+      this.armorFormHeader = 'Edit Armor: ' + armor.armorName;
+    }
+
+    // Set form values
+    this.armorForm.patchValue({
+      armorName: armor.armorName,
+      armorLevel: armor.armorLevel,
+      armorType: armor.armorType,
+      armorStatsGroup: {
+        health: armor.armorStats.health,
+        power: armor.armorStats.power,
+        defense: armor.armorStats.defense
+      }
+    });
+
   }
 
   // CUSTOM ERRORS
@@ -173,11 +261,11 @@ export class ArmorComponent implements OnInit {
     return (c: AbstractControl)  => {
       const health = c.get('health');
       const power = c.get('power');
-      const defence = c.get('defence');
-      if (defence.pristine || power.pristine || health.pristine) {
-        return null;
-      }
-      if ((health.value + power.value + defence.value) !== maxSum) {
+      const defense = c.get('defense');
+      // if (defense.pristine || power.pristine || health.pristine) {
+      //   return null;
+      // }
+      if ((health.value + power.value + defense.value) !== maxSum) {
         return {'sum': true};
       }
       return null;

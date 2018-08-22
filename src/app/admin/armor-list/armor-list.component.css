@@ -1,0 +1,65 @@
+@font-face {
+    font-family: morris;
+    src: url('../../../assets/fonts/MorrisRoman-Black.ttf');
+}
+
+.admin-form {   
+    color: #eeeeee;
+    font-family: morris;
+    width: 90%;
+    box-sizing: border-box;
+    padding-left: 25px;
+    padding-top: 25px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.data-row {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    
+
+}
+
+.tblHead, .cell {
+    width: 12.5%;
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid yellow;
+    box-sizing: border-box;
+    
+}
+
+.tblHead {
+    font-size: 1.2em;
+}
+
+
+.armor-name {
+    width: 100%;
+    font-size: 1.1em;
+    box-sizing: border-box;
+    padding: 7px 0 3px 3px;
+}
+
+.action {
+    font-size: .8em;
+    text-align: center;
+}
+
+a {
+    color: gold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: goldenrod;
+}
+
+.form-header {
+    color: #eeeeee;
+    font-family: morris;
+}

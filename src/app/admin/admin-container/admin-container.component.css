@@ -1,0 +1,68 @@
+@font-face {
+    font-family: morris;
+    src: url('../../../assets/fonts/MorrisRoman-Black.ttf');
+}
+
+.admin-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+}
+
+.admin-armor-nav {
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+
+.admin-armor-nav-item {
+    width: 150px;
+    height: 40px;
+    border: 2px solid black;
+    border-bottom: 0px;
+    color: gold;
+    box-sizing: border-box;
+    padding-left: 20px;
+    padding-top:7px;
+    font-family: morris;
+    font-size: 1.2em;
+    vertical-align: middle;
+    border-radius: 15px 15px 0px 0px;
+    background-color: rgba(0,0,0,.5);
+    margin-right: 3px;
+}
+
+.admin-armor-nav-item a {
+    color: gold;
+    text-decoration: none;
+}
+
+.admin-armor-nav-item a:hover {
+    color: goldenrod;
+}
+
+.admin-content-area {
+    display:flex;
+    justify-content: space-between;
+    flex-direction: row nowrap;
+    border: 4px solid black;
+    background-color: rgba(0,0,0,.5); 
+    width: 900px;
+    height:600px;
+}
+
+.admin-side-panel {
+    flex-grow: 1;
+    background-color: black;
+    width:30%;
+    background: url('../../../assets/blacksmith.jpg') center center;
+    opacity: .7
+
+}
+
+.admin-content {
+    flex-grow: 2;
+    width: 70%;
+    box-sizing: border-box;
+    padding-left: 30px;;
+}

@@ -1,9 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
+import { DataService } from './admin/services/data.service';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -12,9 +15,11 @@ import { AdminModule } from './admin/admin.module';
   imports: [
     BrowserModule,
     AdminModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+   RouterModule.forRoot([])
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,52 @@
+@font-face {
+    font-family: morris;
+    src: url('../../../assets/fonts/MorrisRoman-Black.ttf');
+}
+
+.admin-form {
+    color: #eeeeee;
+    font-family: morris;
+    width: 90%;
+
+}
+
+.armor-details-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.image-box {
+    background-color: black;
+    flex-grow:1;
+}
+
+.armor-details-content {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-left: 25px;
+    flex-grow: 2;
+}
+
+.details-line {
+    width: 100%;
+    display: flex;
+    flex-wrap: row nowrap;
+    justify-content: space-between;
+    padding-top: 7px;
+}
+
+.label {
+    flex-grow: 1;
+    font-size: 1.2em;
+}
+
+.armor-header {
+    flex-grow: 2;
+    font-size: 1.2em;
+}
+
+.armor-type, .armor-level, .armor-stats-group {
+    flex-grow: 2;
+}

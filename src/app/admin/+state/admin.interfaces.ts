@@ -2,13 +2,14 @@ export interface Armor {
     id?: number;
     armorName: string;
     armorType: ArmorTypeEnum;
+    armorLevel: number;
     armorStats: Stats;
 }
 
 export interface Stats {
     health: number;
     power: number;
-    defence: number;
+    defense: number;
 
 }
 
@@ -23,3 +24,11 @@ export enum ArmorTypeEnum {
     Leg= 'Leg',
     Foot= 'Foot'
 }
+
+export interface HttpErrorTracker {
+    errorNumber: number;
+    message: string;
+    friendlymessage: string;
+}
+
+

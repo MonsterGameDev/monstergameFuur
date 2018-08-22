@@ -1,0 +1,21 @@
+<div class="admin-container">    
+  <div class="admin-armor-nav">
+    <div class="admin-armor-nav-item">
+      Admin Home
+    </div>
+    <div class="admin-armor-nav-item">
+      <a [routerLink]="['/armor']">Armor List</a>
+    </div>
+    <div class="admin-armor-nav-item">
+        <a [routerLink]="['/editarmor', '0']">Add Armor</a>
+    </div>
+    <div class="admin-armor-navn-item"></div>
+  </div>
+  <div class="admin-content-area">
+      <div class="admin-side-panel"></div>
+      <div class="admin-content">
+        <router-outlet></router-outlet>
+        <!-- <app-armor></app-armor> -->
+      </div>
+  </div>
+</div>
