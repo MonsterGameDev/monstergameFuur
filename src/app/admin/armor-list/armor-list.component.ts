@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './../services/data.service';
 import { Armor, HttpErrorTracker } from '../+state/admin.interfaces';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-armor-list',
@@ -11,16 +11,25 @@ import { Router } from '@angular/router';
 export class ArmorListComponent implements OnInit {
   armor: Armor[];
 
-  constructor(private svc: DataService, private router: Router) { }
+  constructor(private svc: DataService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.svc.getAllArmor().subscribe(
-      (val: Armor[]) => {
-        console.log('armor: ', val);
-        this.armor = val;
-      },
-      (err: HttpErrorTracker) => console.log (`${err.errorNumber} ${err.message} ${err.friendlymessage}`)
-    );
+    const resolvedArmor: Armor[] | HttpErrorTracker = this.activatedRoute.snapshot.data['resolvedArmor'];
+
+    if (this.isHttpErrorTracker(resolvedArmor)) {
+      const err = resolvedArmor;
+      console.log (`${err.errorNumber} ${err.message} ${err.friendlymessage}`);
+    } else {
+      this.armor = resolvedArmor;
+    }
+
+    // this.svc.getAllArmor().subscribe(
+    //   (val: Armor[]) => {
+    //     console.log('armor: ', val);
+    //     this.armor = val;
+    //   },
+    //   (err: HttpErrorTracker) => console.log (`${err.errorNumber} ${err.message} ${err.friendlymessage}`)
+    // );
   }
 
   deleteArmor(id: Number): void {
@@ -34,5 +43,10 @@ export class ArmorListComponent implements OnInit {
 
         );
     }
+  }
+
+  // check if argument is of type HttpErrorTracker - type guard
+  isHttpErrorTracker(arg: any): arg is HttpErrorTracker {
+    return arg.errorNumber !== undefined;
   }
 }

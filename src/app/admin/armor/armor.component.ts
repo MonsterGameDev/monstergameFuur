@@ -248,9 +248,9 @@ export class ArmorComponent implements OnInit {
       armorLevel: armor.armorLevel,
       armorType: armor.armorType,
       armorStatsGroup: {
-        health: armor.armorStats.health,
-        power: armor.armorStats.power,
-        defense: armor.armorStats.defense
+        health: armor.armorStatsGroup.health,
+        power: armor.armorStatsGroup.power,
+        defense: armor.armorStatsGroup.defense
       }
     });
 

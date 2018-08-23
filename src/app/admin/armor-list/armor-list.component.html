@@ -12,9 +12,9 @@
       <span class="armor-name">{{ a.armorName }}</span>
       <span class="cell">{{ a.armorType }}</span>
       <span class="cell">{{ a.armorLevel }}</span>
-      <span class="cell">{{ a.armorStats.health }}</span>
-      <span class="cell">{{ a.armorStats.power }}</span>
-      <span class="cell">{{ a.armorStats.defense }}</span>
+      <span class="cell">{{ a.armorStatsGroup.health }}</span>
+      <span class="cell">{{ a.armorStatsGroup.power }}</span>
+      <span class="cell">{{ a.armorStatsGroup.defense }}</span>
       <span class="cell action"><a [routerLink]="['/editarmor', a.id]">EDIT</a></span>
       <span class="cell action"><a [routerLink]="['/armordetails', a.id]">DETAILS</a></span>
       <span class="cell action"><a (click)="deleteArmor(a.id)">DELETE</a></span>

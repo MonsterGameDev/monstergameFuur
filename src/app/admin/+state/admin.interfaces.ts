@@ -3,7 +3,7 @@ export interface Armor {
     armorName: string;
     armorType: ArmorTypeEnum;
     armorLevel: number;
-    armorStats: Stats;
+    armorStatsGroup: Stats;
 }
 
 export interface Stats {

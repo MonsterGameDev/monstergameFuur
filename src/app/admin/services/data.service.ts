@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Armor, ArmorTypeEnum, HttpErrorTracker } from '../+state/admin.interfaces';
 import { HttpClient, HttpHeaders, HttpHeaderResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class DataService {
       armorName: null,
       armorLevel: null,
       armorType: null,
-      armorStats: {
+      armorStatsGroup: {
         health: null,
         power: null,
         defense: null
@@ -27,10 +27,11 @@ export class DataService {
   }
 
   getAllArmor(): Observable<Armor[] | HttpErrorTracker> {
-    const url = this.baseUrl + '/error/500';
+    const url = this.baseUrl;
     return this._http.get<Armor[]>(url)
       .pipe(
-        catchError(err => this.handleHttpError(err))
+        catchError(err => this.handleHttpError(err)),
+        delay(1000)
       );
   }
 
@@ -68,7 +69,7 @@ export class DataService {
   // Error handling:
   handleHttpError(error: HttpErrorResponse): Observable<HttpErrorTracker> {
     const dataError: HttpErrorTracker = {
-      errorNumber: 100,
+      errorNumber: error.status,
       message: error.statusText,
       friendlymessage: 'An error occurred retrieving data from the server'
     };
